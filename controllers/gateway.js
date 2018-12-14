@@ -3,6 +3,7 @@ const config = require('../config')
 const simplify = require('../utils/simplifier')
 const logger = require('../utils/logger').logger('gateway');
 const pt = require('promise-timeout');
+var arangoDb = require("../models/arango.js")
 
 function getTtsResult(text, speed, role, pit, vol) {
     var path = 'static/tts/v1/'
@@ -34,7 +35,12 @@ const apiHandle = async (req) => {
         case 'get-text-tts':
             result = await getTtsResult(params.text, params.speed, params.role, params.pit, params.vol)
             break;
-
+        case 'add-user':
+            result = await arangoDb.addUser(userId, params.source)
+            break;
+        case 'has-user':
+            result = await arangoDb.hasUser(userId, params.source)
+            break;
         default:
             result = 'unknown gateway api : ' + api;
             logger.error(result);
