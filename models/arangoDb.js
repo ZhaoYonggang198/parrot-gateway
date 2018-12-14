@@ -55,7 +55,7 @@ async function querySingleDoc(aql){
         }
     },
     err => {
-        logger.error('Failed to fetch agent document:')
+        logger.info('fetch no document:')
         return null
     })
 }

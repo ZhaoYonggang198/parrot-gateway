@@ -35,11 +35,11 @@ const apiHandle = async (req) => {
         case 'get-text-tts':
             result = await getTtsResult(params.text, params.speed, params.role, params.pit, params.vol)
             break;
-        case 'add-user':
-            result = await arangoDb.addUser(userId, params.source)
+        case 'user-login':
+            result = await arangoDb.userLogin(params.source, userId)
             break;
         case 'has-user':
-            result = await arangoDb.hasUser(userId, params.source)
+            result = await arangoDb.hasUser(params.source, userId)
             break;
         default:
             result = 'unknown gateway api : ' + api;
@@ -69,3 +69,6 @@ const gatewayApi = async (ctx) => {
 module.exports = {
     'POST /gateway' : gatewayApi
 }
+
+
+
