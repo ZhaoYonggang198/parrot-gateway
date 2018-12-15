@@ -41,6 +41,9 @@ const apiHandle = async (req) => {
         case 'has-user':
             result = await arangoDb.hasUser(params.source, userId)
             break;
+        case 'get-last-login-day':
+            result = await arangoDb.getLastLoginDay(params.source, userId)
+            break;
         default:
             result = 'unknown gateway api : ' + api;
             logger.error(result);

@@ -15,10 +15,21 @@ async function hasUser(source, userId) {
 }
 
 //////////////////////////////////////////////////////////////////
+async function getLastLoginDay(source, userId) {
+    var aql = `FOR doc IN ${userIdsCollection} filter doc.source =='${source}' and  doc.userId == '${userId}' return doc`
+    logger.info('execute aql', aql)
+    var user =  await arangoDb.querySingleDoc(aql)
+    if (user == null) {
+        return getlocalDateString()
+    }
+    return user.lastLoginDay
+}
+
+//////////////////////////////////////////////////////////////////
 async function userLogin(source, userId) {
     var aql = `UPSERT { source: '${source}', userId: '${userId}' } 
-    INSERT { source: '${source}', userId: '${userId}', registrationTime :  DATE_ISO8601(DATE_NOW()), lastLoginTime : DATE_ISO8601(DATE_NOW()) } 
-    UPDATE { lastLoginTime : DATE_ISO8601(DATE_NOW()) } IN '${userIdsCollection}'
+    INSERT { source: '${source}', userId: '${userId}', registrationDay :  DATE_FORMAT(DATE_NOW(), '%m/%d/%yyyy'), lastLoginDay : DATE_FORMAT(DATE_NOW(), '%m/%d/%yyyy') } 
+    UPDATE { lastLoginDay : DATE_FORMAT(DATE_NOW(), '%m/%d/%yyyy') } IN '${userIdsCollection}'
     `
     await db.query(aql)
     await recordUserLogin(source, userId)
@@ -33,7 +44,14 @@ async function recordUserLogin(source, userId) {
     return true
 }
 
+//////////////////////////////////////////////////////////////////
+function getlocalDateString() {
+    var myDate = new Date()
+    return myDate.toLocaleDateString()
+}
+
 module.exports={
     hasUser,
-    userLogin
+    userLogin,
+    getLastLoginDay
 }
