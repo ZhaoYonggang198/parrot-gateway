@@ -3,7 +3,8 @@ const config = require('../config')
 const simplify = require('../utils/simplifier')
 const logger = require('../utils/logger').logger('gateway');
 const pt = require('promise-timeout');
-var USER = require("../arango/user.js")
+const USER = require("../arango/user.js")
+const CONTEXT = require("../arango/context.js")
 
 function getTtsResult(text, speed, role, pit, vol) {
     var path = 'static/tts/v1/'
@@ -42,7 +43,7 @@ const apiHandle = async (req) => {
             result = await USER.getLastLoginDay(params.uuid)
             break;
         case 'adopt-newborn-parrot':
-            result = await USER.adoptNewBornParrot(params.uuid)
+            result = await CONTEXT.adoptNewBornParrot(params.uuid)
             break;
         default:
             result = 'unknown gateway api : ' + api;
