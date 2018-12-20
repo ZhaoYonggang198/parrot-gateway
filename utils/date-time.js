@@ -7,7 +7,7 @@ function getLocalDate() {
 //////////////////////////////////////////////////////////////////
 function getLocalTime() {
     var date = new Date()
-    return date.toLocaleTimeString()
+    return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12:false});
 }
 
 module.exports= {
