@@ -13,7 +13,6 @@ async function buildRelation(user, parrot) {
     doc.user = user
     doc.parrot = parrot
     doc.valid = true
-    doc.learning = []
     return await ARANGO.saveDoc(collectionName, doc)
 }
 

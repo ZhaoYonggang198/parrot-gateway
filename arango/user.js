@@ -20,6 +20,9 @@ async function getLastLoginDay(key) {
 //////////////////////////////////////////////////////////////////
 async function userLogin(source, userId) {
   logger.debug('userLogin:')
+  if (!source || !userId) {
+    return {}
+  }
   let aql = `UPSERT { source: '${source}', userId: '${userId}' } 
   INSERT { 
     source       : '${source}', 
@@ -43,7 +46,7 @@ async function userLogin(source, userId) {
     relation = user.relations[0]
   }
   let parrot = user.parrot ? user.parrot : ''
-  return { uuid : user._key, relation : relation, parrot : parrot }
+  return { uuid : user._key, relation : relation, parrot : parrot, lastLogin : user.lastLogin }
 }
 
 //////////////////////////////////////////////////////////////////
