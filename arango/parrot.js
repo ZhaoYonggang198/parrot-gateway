@@ -21,15 +21,14 @@ async function fetchParrot(key) {
 }
 
 //////////////////////////////////////////////////////////////////
-async function available(key) {
-  let parrot = await ARANGO.fetchDoc(collectionName, key)
+async function available(parrot) {
   if(!parrot.relations) {
     return true
   }
   if (parrot.relations.length === 0) {
     return true
   }
-  let relation = RELATION.fetchRelation(parrot.relations[0])
+  let relation = await RELATION.fetchRelation(parrot.relations[0])
   if (!relation) {
     return false
   }

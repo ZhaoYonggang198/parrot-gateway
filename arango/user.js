@@ -61,24 +61,41 @@ async function fetchUser(key) {
 }
 
 //////////////////////////////////////////////////////////////////
-async function available(key) {
-  let user = await ARANGO.fetchDoc(userIdsCollection, key)
+async function fetchLastRelation(user) {
+  if(!user.relations) {
+    return {}
+  }
+  if (user.relations.length === 0) {
+    return {}
+  }
+  var relation = await RELATION.fetchRelation(user.relations[0])
+  if (!relation) {
+    return {}
+  }
+  return relation
+}
+
+//////////////////////////////////////////////////////////////////
+async function available(user) {
+  logger.info('user available, user:', JSON.stringify(user))
   if(!user.relations) {
     return true
   }
   if (user.relations.length === 0) {
     return true
   }
-  let relation = RELATION.fetchRelation(user.relations[0])
+  let relation = await RELATION.fetchRelation(user.relations[0])
   if (!relation) {
     return false
   }
-  return !relation.valid
+  logger.info('user available， relation:', JSON.stringify(relation))
+  return relation.valid != true
 }
 
 module.exports= {
   userLogin,
   getLastLoginDay,
   fetchUser,
-  available
+  available,
+  fetchLastRelation
 }

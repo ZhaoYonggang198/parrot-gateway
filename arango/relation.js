@@ -13,11 +13,13 @@ async function buildRelation(user, parrot) {
     doc.user = user
     doc.parrot = parrot
     doc.valid = true
+    doc.learning = []
     return await ARANGO.saveDoc(collectionName, doc)
 }
 
 //////////////////////////////////////////////////////////////////
 async function fetchRelation(key) {
+  logger.info('fetchRelation:', key)
   return await ARANGO.fetchDoc(collectionName, key)
 }
 

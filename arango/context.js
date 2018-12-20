@@ -13,13 +13,17 @@ const relationCollection = "relation"
 //TODO, should invoke transaction
 async function buildRelation(userId, parrotId) {
   var relationKey = await RELATION.buildRelation(userId, parrotId)
-  var parrotAvailable = await PARROT.available(parrotId)
-  var userAvailable = await USER.available(userId)
-  if (!parrotAvailable || !userAvailable) {
-    return
-  }
   var parrot = await PARROT.fetchParrot(parrotId)
   var user = await USER.fetchUser(userId)
+  var parrotAvailable = await PARROT.available(parrot)
+  var userAvailable = await USER.available(user)
+  if (!userAvailable) {
+    return user.relations[0]
+  }
+  if (!parrotAvailable) {
+    return parrot.relations[0]
+  }
+
   if (parrot) {
     logger.info('buildRelation, parrot', JSON.stringify(parrot))
   }
@@ -29,19 +33,29 @@ async function buildRelation(userId, parrotId) {
 
   // push at the beginning
   parrot.relations.unshift(relationKey);
-  ARANGO.updateDoc(parrotCollection, parrotId, parrot)
+  await ARANGO.updateDoc(parrotCollection, parrotId, parrot)
 
   // push at the beginning
   user.relations.unshift(relationKey);
-  ARANGO.updateDoc(userCollection, userId, user)
+  await ARANGO.updateDoc(userCollection, userId, user)
+  return relationKey
 }
 
 async function adoptNewBornParrot(userId) {
+  let user = await USER.fetchUser(userId)
+  let userAvailable = await USER.available(user)
+  if (!userAvailable) {
+    let relation = await USER.fetchLastRelation(user)
+    return {relation : relation._key, parrot : relation.parrot}
+  }
   let parrotId = await PARROT.deliverNewParrot()
+  if (parrotId === null) {
+    return { relation : "", parrot : ""}
+  }
   logger.info('adoptNewBornParrot, parrot:', parrotId)
   logger.info('adoptNewBornParrot, user:', userId)
-  await buildRelation(userId, parrotId)
-  return true
+  let key = await buildRelation(userId, parrotId)
+  return { relation: key, parrot: parrotId }
 }
 
 module.exports= {
