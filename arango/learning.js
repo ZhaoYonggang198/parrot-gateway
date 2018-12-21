@@ -1,6 +1,6 @@
 const ARANGO = require("./arango.js")
 const DATE = require('../utils/date-time.js');
-const logger = require('../utils/logger').logger('userDB');
+const logger = require('../utils/logger').logger('learningDB');
 
 const db = ARANGO.getDb() 
 const collectionName = "learning"
@@ -26,15 +26,24 @@ async function endLearning(uuid) {
 }
 
 async function addSentence(uuid, userSay, userMedia, parrotUrl) {
+  if (!uuid) {
+    logger.error('addSentence, uuid is null')
+    return false
+  }
   var doc = await ARANGO.fetchDoc(collectionName, uuid)
   if (!doc) {
     logger.error('addSentence, doc not found:', uuid)
     return false
   }
   var item = {
-    userSay : userSay,
-    userMedia : userMedia,
-    parrotUrl : parrotUrl
+    userSay : "你好",
+    userMedia : "userMedia",
+    parrotUrl : "parrotUrl"
+  }
+  var item = {
+    userSay : userSay ? userSay : "",
+    userMedia : userMedia ? userMedia : "",
+    parrotUrl : parrotUrl ? parrotUrl : ""
   }
   if (!doc.sentences) {
     doc.sentences = []
