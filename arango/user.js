@@ -28,10 +28,10 @@ async function userLogin(source, userId) {
     source       : '${source}', 
     userId       : '${userId}', 
     relations    : [],
-    registration : DATE_FORMAT(DATE_NOW(), '%m/%d/%yyyy'), 
-    lastLogin    : DATE_FORMAT(DATE_NOW(), '%m/%d/%yyyy') 
+    registration : DATE_FORMAT(DATE_NOW(), '%m-%d-%yyyy'), 
+    lastLogin    : DATE_FORMAT(DATE_NOW(), '%m-%d-%yyyy') 
   } 
-  UPDATE { lastLogin : DATE_FORMAT(DATE_NOW(), '%m/%d/%yyyy') } IN '${userIdsCollection}'
+  UPDATE { lastLogin : DATE_FORMAT(DATE_NOW(), '%m-%d-%yyyy') } IN '${userIdsCollection}'
   RETURN { doc : NEW }
   `
   let docs = await ARANGO.queryDocs(aql)

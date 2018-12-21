@@ -1,7 +1,8 @@
 //////////////////////////////////////////////////////////////////
 function getLocalDate() {
     var date = new Date()
-    return date.toLocaleDateString()
+    var result = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear()
+    return result
 }
 
 //////////////////////////////////////////////////////////////////

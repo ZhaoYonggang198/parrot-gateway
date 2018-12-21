@@ -7,12 +7,12 @@ const collectionName = "learning"
 
 async function startLearning(user, parrot, relation) {
   var doc = {
-  user : user,
-  parrot : parrot,
-  relation : relation,
-  startDay : DATE.getLocalDate(),
-  startTime : DATE.getLocalTime(),
-  sentences : []
+    user : user,
+    parrot : parrot,
+    relation : relation,
+    startDay : DATE.getLocalDate(),
+    startTime : DATE.getLocalTime(),
+    sentences : []
   }
   return await ARANGO.saveDoc(collectionName, doc)
 }
@@ -48,8 +48,8 @@ async function addSentence(uuid, userSay, userMedia, parrotUrl) {
 }
 
 async function querySentences(relation, day) {
-  let aql = `for doc in '${collectionName}'
-  FILTER doc.relation == ${relation}' && doc.startDay == {day}
+  let aql = `for doc in ${collectionName}
+  FILTER doc.relation == '${relation}' && doc.startDay == '${day}'
   return doc
   `
   let learnings = await ARANGO.queryDocs(aql)
@@ -59,8 +59,8 @@ async function querySentences(relation, day) {
   var sentences = []
   var count = learnings.length;
   for (var i = 0; i < count; i++) {
-    if (doc[i].sentences) {
-      sentences = sentences.concat(doc[i].sentences)
+    if (learnings[i].sentences) {
+      sentences = sentences.concat(learnings[i].sentences)
     }
   }
   return sentences
@@ -69,5 +69,6 @@ async function querySentences(relation, day) {
 module.exports= {
   startLearning,
   endLearning,
-  addSentence
+  addSentence,
+  querySentences
 }

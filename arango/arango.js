@@ -62,7 +62,7 @@ async function fetchDoc(collectionName, key) {
 }
 //////////////////////////////////////////////////////////////////
 async function queryDocs(aql) {
-  // logger.info("qery aql is: ", aql)
+  logger.info("qery aql is: ", aql)
   return await getDb().query(aql).then(cursor => cursor.all())
   .then(
     docs =>  { return docs },

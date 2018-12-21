@@ -62,7 +62,7 @@ const apiHandle = async (req) => {
       result = await LEARNING.addSentence(params.uuid, params.userSay, params.userMedia, params.parrotUrl)
       break;
     case 'query-sentences':
-      result = await LEARNING.querySentences(params.relation, params.startDay)
+      result = await LEARNING.querySentences(params.relation, params.day)
       break;
     default:
       result = 'unknown gateway api : ' + api;
