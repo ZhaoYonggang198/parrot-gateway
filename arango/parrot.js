@@ -9,15 +9,15 @@ const collectionName = "parrot"
 
 //////////////////////////////////////////////////////////////////
 async function deliverNewParrot() {
-    let doc = {}
-    doc.birthday = DATE.getLocalDate()
-    doc.relations = []
-    return await ARANGO.saveDoc(collectionName, doc)
+  let doc = {}
+  doc.birthday = DATE.getLocalDate()
+  doc.relations = []
+  return await ARANGO.saveDoc(collectionName, doc)
 }
 
 //////////////////////////////////////////////////////////////////
 async function fetchParrot(key) {
-    return await ARANGO.fetchDoc(collectionName, key)
+  return await ARANGO.fetchDoc(collectionName, key)
 }
 
 //////////////////////////////////////////////////////////////////

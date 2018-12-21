@@ -7,12 +7,12 @@ const collectionName = "learning"
 
 async function startLearning(user, parrot, relation) {
   var doc = {
-    user : user,
-    parrot : parrot,
-    relation : relation,
-    startDay : DATE.getLocalDate(),
-    startTime : DATE.getLocalTime(),
-    sentences : []
+  user : user,
+  parrot : parrot,
+  relation : relation,
+  startDay : DATE.getLocalDate(),
+  startTime : DATE.getLocalTime(),
+  sentences : []
   }
   return await ARANGO.saveDoc(collectionName, doc)
 }
@@ -36,11 +36,6 @@ async function addSentence(uuid, userSay, userMedia, parrotUrl) {
     return false
   }
   var item = {
-    userSay : "你好",
-    userMedia : "userMedia",
-    parrotUrl : "parrotUrl"
-  }
-  var item = {
     userSay : userSay ? userSay : "",
     userMedia : userMedia ? userMedia : "",
     parrotUrl : parrotUrl ? parrotUrl : ""
@@ -50,6 +45,25 @@ async function addSentence(uuid, userSay, userMedia, parrotUrl) {
   }
   doc.sentences.unshift(item)
   return await ARANGO.updateDoc(collectionName, uuid, doc)
+}
+
+async function querySentences(relation, day) {
+  let aql = `for doc in '${collectionName}'
+  FILTER doc.relation == ${relation}' && doc.startDay == {day}
+  return doc
+  `
+  let learnings = await ARANGO.queryDocs(aql)
+  if (!learnings) {
+    return []
+  }
+  var sentences = []
+  var count = learnings.length;
+  for (var i = 0; i < count; i++) {
+    if (doc[i].sentences) {
+      sentences = sentences.concat(doc[i].sentences)
+    }
+  }
+  return sentences
 }
 
 module.exports= {

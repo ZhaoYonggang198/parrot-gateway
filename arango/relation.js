@@ -8,12 +8,12 @@ const collectionName = "relation"
 
 //////////////////////////////////////////////////////////////////
 async function buildRelation(user, parrot) {
-    let doc = {}
-    doc.start = DATE.getLocalDate()
-    doc.user = user
-    doc.parrot = parrot
-    doc.valid = true
-    return await ARANGO.saveDoc(collectionName, doc)
+  let doc = {}
+  doc.start = DATE.getLocalDate()
+  doc.user = user
+  doc.parrot = parrot
+  doc.valid = true
+  return await ARANGO.saveDoc(collectionName, doc)
 }
 
 //////////////////////////////////////////////////////////////////
