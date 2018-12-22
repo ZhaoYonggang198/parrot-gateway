@@ -2,7 +2,7 @@ const ARANGO = require("./arango.js")
 const RELATION = require("./relation.js")
 const DATE = require('../utils/date-time.js');
 const logger = require('../utils/logger').logger('parrotDB');
-
+const UTILS = require('../utils/utils')
 const db = ARANGO.getDb() 
 const collectionName = "parrot"
 
@@ -18,6 +18,30 @@ async function deliverNewParrot() {
 //////////////////////////////////////////////////////////////////
 async function fetchParrot(key) {
   return await ARANGO.fetchDoc(collectionName, key)
+}
+
+//////////////////////////////////////////////////////////////////
+async function getParrotInfo(key) {
+  var parrot = await ARANGO.fetchDoc(collectionName, key)
+  if (!parrot) {
+    return {}
+  }
+  return {
+    name      : UTILS.safeValue(parrot.name),
+    gender    : UTILS.safeValue(parrot.gender),
+    birthday  : UTILS.safeValue(parrot.birthday)
+  }
+}
+
+//////////////////////////////////////////////////////////////////
+async function updateParrotName(key, name) {
+  if (!key || !name) {
+    return false
+  }
+  let doc = {
+    name : name
+  }
+  return await ARANGO.updateDoc(collectionName, key, doc)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -49,5 +73,7 @@ async function available(parrot) {
 module.exports= {
   deliverNewParrot,
   fetchParrot,
-  available
+  available,
+  getParrotInfo,
+  updateParrotName
 }

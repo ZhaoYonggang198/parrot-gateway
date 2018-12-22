@@ -33,10 +33,12 @@ async function buildRelation(userId, parrotId) {
 
   // push at the beginning
   parrot.relations.unshift(relationKey);
+  parrot.master = userId
   await ARANGO.updateDoc(parrotCollection, parrotId, parrot)
 
   // push at the beginning
   user.relations.unshift(relationKey);
+  user.parrot = parrotId
   await ARANGO.updateDoc(userCollection, userId, user)
   return relationKey
 }
