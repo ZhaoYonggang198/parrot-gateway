@@ -1,13 +1,13 @@
 const log4js = require('log4js');
 
 log4js.configure({
-    appenders: {
-      out: { type: 'stdout' },
-      app: { type: 'file', filename: 'logs/access.log' }
-    },
-    categories: {
-      default: { appenders: [ 'out', 'app' ], level: 'debug' }
-    }
+  appenders: {
+    console: { type: 'console' },
+    file: { type: 'dateFile', filename: 'logs/', pattern: 'yyyy-MM-dd.log', alwaysIncludePattern: true}
+  },
+  categories: {
+    default: { appenders: ['console', 'file'], level: 'debug' }
+  }
 });
 
 exports.logger = function(name){
