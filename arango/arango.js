@@ -55,11 +55,22 @@ async function fetchDoc(collectionName, key) {
   .then(
     doc => { return doc },
     err => {
-    console.error('Failed to fetch document:', err)
+      logger.error('Failed to fetch document:', err)
     return null
   }
   );
 }
+
+//////////////////////////////////////////////////////////////////
+async function removeDoc(collectionName, key) {
+  return await getDb().collection(collectionName).remove(key)
+    .then(
+      () => logger.info('Document removed'),
+      err => logger.error('Failed to remove document', err)
+    );
+
+}
+
 //////////////////////////////////////////////////////////////////
 async function queryDocs(aql) {
   logger.info("qery aql is: ", aql)
@@ -78,5 +89,6 @@ module.exports= {
   saveDoc,
   fetchDoc,
   updateDoc,
+  removeDoc,
   queryDocs
 }

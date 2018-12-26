@@ -18,7 +18,19 @@ async function startLearning(user, parrot, relation) {
 }
 
 async function endLearning(uuid) {
-  var doc = {
+  if (!uuid) {
+    logger.error('endLearning, uuid is null')
+    return false
+  }
+  var doc = await ARANGO.fetchDoc(collectionName, uuid)
+  if (!doc) {
+    logger.error('endLearning, doc not found:', uuid)
+    return false
+  }
+  if (!doc.sentences || doc.sentences.length === 0) {
+    return await ARANGO.removeDoc(collectionName, uuid)
+  }
+  doc = {
     endDay : DATE.getLocalDate(),
     endTime : DATE.getLocalTime()
   }
