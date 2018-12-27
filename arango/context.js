@@ -11,18 +11,18 @@ const userCollection = "user"
 const relationCollection = "relation"
 
 //TODO, should invoke transaction
-async function buildRelation(userId, parrotId) {
+async function _buildRelation(userId, parrotId) {
   var relationKey = await RELATION.buildRelation(userId, parrotId)
   var parrot = await PARROT.fetchParrot(parrotId)
   var user = await USER.fetchUser(userId)
-  var parrotAvailable = await PARROT.available(parrot)
-  var userAvailable = await USER.available(user)
-  if (!userAvailable) {
-    return user.relations[0]
-  }
-  if (!parrotAvailable) {
-    return parrot.relations[0]
-  }
+  // var parrotAvailable = await PARROT.available(parrot)
+  // var userAvailable = await USER.available(user)
+  // if (!userAvailable) {
+  //   return user.relations[0]
+  // }
+  // if (!parrotAvailable) {
+  //   return parrot.relations[0]
+  // }
 
   if (parrot) {
     logger.info('buildRelation, parrot', JSON.stringify(parrot))
@@ -56,7 +56,7 @@ async function adoptNewBornParrot(userId) {
   }
   logger.info('adoptNewBornParrot, parrot:', parrotId)
   logger.info('adoptNewBornParrot, user:', userId)
-  let key = await buildRelation(userId, parrotId)
+  let key = await _buildRelation(userId, parrotId)
   return { relation: key, parrot: parrotId }
 }
 
