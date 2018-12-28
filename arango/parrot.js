@@ -2,10 +2,10 @@ const ARANGO = require("./arango.js")
 const RELATION = require("./relation.js")
 const DATE = require('../utils/date-time.js');
 const logger = require('../utils/logger').logger('parrotDB');
-const UTILS = require('../utils/utils')
+const UTILS = require('../utils/utils.js')
 const db = ARANGO.getDb() 
 const collectionName = "parrot"
-
+const intiIntimateScore = 100
 
 //////////////////////////////////////////////////////////////////
 async function deliverNewParrot() {

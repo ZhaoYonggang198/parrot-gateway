@@ -19,11 +19,118 @@
         "errorType": "success"
     },
     "result": {
-        "uuid": "74284960",
-        "relation": "74284986",
-        "parrot": "74284982",
-        "lastLogin": "2018-12-30"
+        "uuid"       : `_key of user`,
+        "relation"   : `_key of relation`,
+        "parrot"     : `_key of parrot`,
+        "lastLogin"  : "2018-12-30",
+        "onlineDays" : 3
     }
+}
+```
+### adopt-newborn-parrot
+#### request
+```json
+{
+    "api" : "adopt-newborn-parrot",
+    "arguments" : {
+        "uuid":`_key of user`
+    },
+    "userId" : "darwin_C7J4i4YMagyPEP7wqbMBMg_C__C_"
+}
+```
+#### reply
+```json
+{
+    "status": {
+        "code": 200,
+        "errorType": "success"
+    },
+    "result": {
+        "relation": "75097984",
+        "parrot": "75097980"
+    }
+}
+```
+### start-learning
+#### request
+```json
+{
+    "api" : "start-learning",
+    "arguments" : {
+        "user"  : {
+            "uuid"       : "xiaoai__darwin_C7J4i4YMagyPEP7wqbMBMg_C__C_",
+            "relation"   : "75097984",
+            "parrot"     : "75097980"
+        }
+    },
+    "userId" : "darwin_C7J4i4YMagyPEP7wqbMBMg_C__C_"
+}
+```
+#### reply
+```json
+{
+    "status": {
+        "code": 200,
+        "errorType": "success"
+    },
+    "result": {
+        "learningId": "75106779"
+    }
+}
+```
+### end-learning
+#### request
+```json
+{
+    "api" : "end-learning",
+    "arguments" : {
+        "user"  : {
+            "uuid"       : "xiaoai__darwin_C7J4i4YMagyPEP7wqbMBMg_C__C_",
+            "relation"   : "75097984",
+            "parrot"     : "75097980"
+        },
+        "uuid" : "75106779"
+    },
+    "userId" : "darwin_C7J4i4YMagyPEP7wqbMBMg_C__C_"
+}
+```
+#### reply
+```json
+{
+    "status": {
+        "code": 200,
+        "errorType": "success"
+    },
+    "result": true
+}
+```
+### add-sentence
+#### request
+```json
+{
+    "api" : "add-sentence",
+    "arguments" : {
+        "user"  : {
+            "uuid"       : "xiaoai__darwin_C7J4i4YMagyPEP7wqbMBMg_C__C_",
+            "relation"   : "75097984",
+            "parrot"     : "75097980"
+        },
+        "learningId" : "75106779",
+        "userSay"    : "乌鸦是黑色的",
+        "userMedia"  : "57b222dacc00400fccd3828d",
+        "parrotUrl"  : "https://www.xiaodamp.cn/resource/audio/parrot/parrot-default.mp3"
+    },
+    "userId" : "darwin_C7J4i4YMagyPEP7wqbMBMg_C__C_"
+}
+```
+#### reply
+```json
+{
+    "status": {
+        "code": 200,
+        "errorType": "success"
+    },
+    "result": true
 }
 ```
 ### query-sentences

@@ -3,9 +3,8 @@ const config = require('../config')
 const simplify = require('../utils/simplifier')
 const logger = require('../utils/logger').logger('gateway');
 const pt = require('promise-timeout');
-const USER = require("../arango/user.js")
+const USER_CTX = require("../module/user_context.js")
 const CONTEXT = require("../arango/context.js")
-const LEARNING = require("../arango/learning.js")
 const PARROT = require("../arango/parrot.js")
 
 function getTtsResult(text, speed, role, pit, vol) {
@@ -45,25 +44,22 @@ const apiHandle = async (req) => {
       result = await getTtsResult(params.text, params.speed, params.role, params.pit, params.vol)
       break;
     case 'user-login':
-      result = await USER.userLogin(params.source, userId)
-      break;
-    case 'get-last-login-day':
-      result = await USER.getLastLoginDay(params.uuid)
+      result = await USER_CTX.userLogin(params.source, userId)
       break;
     case 'adopt-newborn-parrot':
       result = await CONTEXT.adoptNewBornParrot(params.uuid)
       break;
     case 'start-learning':
-      result = await LEARNING.startLearning(params.user, params.parrot, params.relation)
+      result = await USER_CTX.startLearning(params.user)
       break;
     case 'end-learning':
-      result = await LEARNING.endLearning(params.uuid)
+      result = await USER_CTX.endLearning(params.user, params.uuid)
       break;
     case 'add-sentence':
-      result = await LEARNING.addSentence(params.uuid, params.userSay, params.userMedia, params.parrotUrl)
+      result = await USER_CTX.addSentence(params.user, params.learningId, params.userSay, params.userMedia, params.parrotUrl)
       break;
     case 'query-sentences':
-      result = await LEARNING.querySentences(params.relation, params.day)
+      result = await USER_CTX.querySentences(params.relation, params.day)
       break;
     case 'get-parrot-info':
       result = await PARROT.getParrotInfo(params.uuid)

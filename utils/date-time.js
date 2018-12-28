@@ -1,7 +1,9 @@
+const UTILS = require("./utils.js") 
 //////////////////////////////////////////////////////////////////
 function getLocalDate() {
     var date = new Date()
-    var result = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+    var result = date.getFullYear() + '-' + UTILS.paddingZero(date.getMonth() + 1, 2) + '-' 
+            + UTILS.paddingZero(date.getDate(), 2)
     return result
 }
 

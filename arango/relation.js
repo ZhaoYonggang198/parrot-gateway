@@ -13,6 +13,7 @@ async function buildRelation(user, parrot) {
   doc.user = user
   doc.parrot = parrot
   doc.valid = true
+  doc.intimateScore = intiIntimateScore
   return await ARANGO.saveDoc(collectionName, doc)
 }
 

@@ -68,7 +68,7 @@ async function removeDoc(collectionName, key) {
       () => logger.info('Document removed'),
       err => logger.error('Failed to remove document', err)
     );
-
+    return true
 }
 
 //////////////////////////////////////////////////////////////////

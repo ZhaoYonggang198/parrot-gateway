@@ -18,20 +18,27 @@ async function getLastLoginDay(key) {
 }
 
 //////////////////////////////////////////////////////////////////
+function buildUserKey(source, userId) {
+  return source + '__' + userId
+}
+//////////////////////////////////////////////////////////////////
 async function userLogin(source, userId) {
   logger.debug('userLogin:')
   if (!source || !userId) {
     return {}
   }
-  let aql = `UPSERT { source: '${source}', userId: '${userId}' } 
+  var key = buildUserKey(source, userId)
+  logger.info("user login, _key:", key)
+  let aql = `UPSERT { _key : '${key}' } 
   INSERT { 
+    _key         : '${key}',
     source       : '${source}', 
     userId       : '${userId}', 
     relations    : [],
-    registration : DATE_FORMAT(DATE_NOW(), '%yyyy-%m-%d'), 
-    lastLogin    : DATE_FORMAT(DATE_NOW(), '%yyyy-%m-%d') 
+    registration : DATE_FORMAT(DATE_NOW(), '%yyyy-%mm-%dd'), 
+    lastLogin    : DATE_FORMAT(DATE_NOW(), '%yyyy-%mm-%dd') 
   } 
-  UPDATE { lastLogin : DATE_FORMAT(DATE_NOW(), '%yyyy-%m-%d') } IN '${userIdsCollection}'
+  UPDATE { lastLogin : DATE_FORMAT(DATE_NOW(), '%yyyy-%mm-%dd') } IN '${userIdsCollection}'
   RETURN { doc : NEW }
   `
   let docs = await ARANGO.queryDocs(aql)
