@@ -19,11 +19,11 @@
         "errorType": "success"
     },
     "result": {
-        "uuid"       : `_key of user`,
-        "relation"   : `_key of relation`,
-        "parrot"     : `_key of parrot`,
-        "lastLogin"  : "2018-12-30",
-        "onlineDays" : 3
+        "uuid"           : `_key of user`,
+        "relation"       : `_key of relation`,
+        "parrot"         : `_key of parrot`,
+        "previousLogin"  : "2018-12-30",
+        "keepLoginDays"  : 3
     }
 }
 ```

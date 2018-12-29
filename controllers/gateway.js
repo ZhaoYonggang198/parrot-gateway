@@ -6,6 +6,7 @@ const pt = require('promise-timeout');
 const USER_CTX = require("../module/user_context.js")
 const CONTEXT = require("../arango/context.js")
 const PARROT = require("../arango/parrot.js")
+const LEARNING = require("../arango/learning.js")
 
 function getTtsResult(text, speed, role, pit, vol) {
   var path = 'static/tts/v1/'
@@ -60,6 +61,9 @@ const apiHandle = async (req) => {
       break;
     case 'query-sentences':
       result = await USER_CTX.querySentences(params.relation, params.day)
+      break;
+    case 'get-sentence-count':
+      result = await LEARNING.getSentencesCount(params.relation)
       break;
     case 'get-parrot-info':
       result = await PARROT.getParrotInfo(params.uuid)

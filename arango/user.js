@@ -1,6 +1,7 @@
 const ARANGO = require("./arango.js")
 const RELATION = require("./relation.js")
 const DATE = require('../utils/date-time.js');
+const UTILS = require('../utils/utils.js');
 const logger = require('../utils/logger').logger('userDB');
 
 const db = ARANGO.getDb() 
@@ -35,26 +36,39 @@ async function userLogin(source, userId) {
     source       : '${source}', 
     userId       : '${userId}', 
     relations    : [],
+    keepLoginDays : 1,
     registration : DATE_FORMAT(DATE_NOW(), '%yyyy-%mm-%dd'), 
     lastLogin    : DATE_FORMAT(DATE_NOW(), '%yyyy-%mm-%dd') 
   } 
   UPDATE { lastLogin : DATE_FORMAT(DATE_NOW(), '%yyyy-%mm-%dd') } IN '${userIdsCollection}'
-  RETURN { doc : NEW }
+  RETURN {  user : NEW , lastLogin : OLD.lastLogin }
   `
   let docs = await ARANGO.queryDocs(aql)
   if (docs === null || docs.length === 0) {
     return { uuid : '', relation : '', parrot : '' }
   }
-  var user = docs[0].doc
+  var user = docs[0].user
+  var lastLogin = docs[0].lastLogin
   var relation = ''
 
+  //TODO
+  var days = DATE.updateKeepLoginDays(user.keepLoginDays, lastLogin)
+  await updateKeepLoginDays(user._key, days)
   await recordUserLogin(user._key)
+  
   if (user.relations && user.relations.length > 0) {
     relation = user.relations[0]
   }
-  let parrot = user.parrot ? user.parrot : ''
-  return { uuid : user._key, relation : relation, parrot : parrot, lastLogin : user.lastLogin }
+  logger.info('user login, keepLoginDays:', days)
+  return { 
+          uuid : user._key, 
+          relation : relation, 
+          parrot : UTILS.safeValue(user.parrot), 
+          previousLogin : lastLogin, 
+          keepLoginDays : days
+        }
 }
+
 
 //////////////////////////////////////////////////////////////////
 async function recordUserLogin(id) {
@@ -100,6 +114,18 @@ async function available(user) {
   }
   logger.info('user available， relation:', JSON.stringify(relation))
   return relation.valid != true
+}
+
+//////////////////////////////////////////////////////////////////
+async function updateKeepLoginDays(uuid, days) {
+  logger.info('updateKeepLoginDays:', days)
+  if (!uuid || !days) {
+    return false
+  }
+  let doc = {
+    keepLoginDays : days
+  }
+  return await ARANGO.updateDoc(userIdsCollection, uuid, doc)
 }
 
 module.exports= {

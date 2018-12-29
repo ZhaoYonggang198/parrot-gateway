@@ -4,7 +4,7 @@ const logger = require('../utils/logger').logger('parrotDB');
 
 const db = ARANGO.getDb() 
 const collectionName = "relation"
-
+const initIntimateScore = 100
 
 //////////////////////////////////////////////////////////////////
 async function buildRelation(user, parrot) {
@@ -13,7 +13,7 @@ async function buildRelation(user, parrot) {
   doc.user = user
   doc.parrot = parrot
   doc.valid = true
-  doc.intimateScore = intiIntimateScore
+  doc.intimateScore = initIntimateScore
   return await ARANGO.saveDoc(collectionName, doc)
 }
 
@@ -34,8 +34,21 @@ async function teardownRelation(key) {
   return await  ARANGO.updateDoc(collectionName, key, doc)
 }
 
+
+//////////////////////////////////////////////////////////////////
+async function addScore(uuid, score) {
+  var aql = 
+  `LET doc = DOCUMENT("${collectionName}/${uuid}")
+    update doc with {
+        intimateScore: doc.intimateScore + ${score}
+      } 
+    in ${collectionName}`
+  return await ARANGO.updateDocByAql(aql)
+}
+
 module.exports= {
   buildRelation,
   teardownRelation,
-  fetchRelation
+  fetchRelation,
+  addScore
 }

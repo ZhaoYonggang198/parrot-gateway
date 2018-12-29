@@ -57,7 +57,9 @@ async function adoptNewBornParrot(userId) {
   logger.info('adoptNewBornParrot, parrot:', parrotId)
   logger.info('adoptNewBornParrot, user:', userId)
   let key = await _buildRelation(userId, parrotId)
-  return { relation: key, parrot: parrotId }
+  var relation = await RELATION.fetchRelation(key)
+  
+  return { relation: key, parrot: parrotId, intimate : relation.intimateScore }
 }
 
 module.exports= {

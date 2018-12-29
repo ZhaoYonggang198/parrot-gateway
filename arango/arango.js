@@ -84,11 +84,28 @@ async function queryDocs(aql) {
   );
 }
 
+//////////////////////////////////////////////////////////////////
+async function updateDocByAql(aql) {
+  logger.info("update aql is :", aql)
+  return await getDb().query(aql).then(cursor => cursor.all())
+  .then(
+    docs => {
+            logger.info(`update doc success`)
+            return true
+        },
+    err => {
+        logger.error('Failed to update doc')
+        return false
+    }
+  )
+}
+
 module.exports= {
   getDb,
   saveDoc,
   fetchDoc,
   updateDoc,
   removeDoc,
-  queryDocs
+  queryDocs,
+  updateDocByAql
 }
