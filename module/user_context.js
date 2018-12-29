@@ -36,7 +36,7 @@ async function userLogin(source, userId) {
   }
   if (user.relation) {
     var relation = await RELATION.fetchRelation(user.relation)
-    user.intimate = relation.intimate
+    user.intimate = relation.intimateScore
     user.sentenceCount = await LEARNING.getSentencesCount(user.relation)
   }
   logger.info("user login, info:", user)
