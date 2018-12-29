@@ -3,17 +3,41 @@ const config = require('../config')
 const simplify = require('../utils/simplifier')
 const logger = require('../utils/logger').logger('gateway');
 const pt = require('promise-timeout');
+const fs = require('fs');
 const USER_CTX = require("../module/user_context.js")
 const CONTEXT = require("../arango/context.js")
 const PARROT = require("../arango/parrot.js")
 const LEARNING = require("../arango/learning.js")
 
-function getTtsResult(text, speed, role, pit, vol) {
-  var path = 'static/tts/v1/'
+function build_tts_path(parrot, relation) {
+  var subPath = '/tts/v1/parrot/'
+  var dir = 'static' + subPath
+  if (!fs.existsSync(dir)){
+      fs.mkdirSync(dir);
+  }
+  if (parrot) {
+    subPath = subPath + parrot + '/'
+    dir = 'static' + subPath
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }
+    if (relation) {
+      subPath = subPath + relation + '/'
+      dir = 'static' + subPath
+      if (!fs.existsSync(dir)){
+          fs.mkdirSync(dir);
+      }  
+    }
+  }
+  return subPath
+}
+
+function getTtsResult(parrot, relation, text, speed, role, pit, vol) {
+  var path = build_tts_path(parrot, relation)
   return new Promise((resolve, reject) =>{
-    pt.timeout(TTS.getAudio(text, speed, role, pit, vol, path), 1000)
+    pt.timeout(TTS.getAudio(text, speed, role, pit, vol, 'static' + path), 1000)
       .then((result) => {
-        resolve(config.homeUrl + '/tts/v1/' +  result)
+        resolve(config.homeUrl + path +  result)
       })
       .catch((err) => {
         resolve('https://www.xiaodamp.cn/resource/audio/parrot/parrot-default.mp3')
@@ -42,7 +66,7 @@ const apiHandle = async (req) => {
       result = await simplify(params.query);
       break;
     case 'get-text-tts':
-      result = await getTtsResult(params.text, params.speed, params.role, params.pit, params.vol)
+      result = await getTtsResult(params.parrot, params.relation, params.text, params.speed, params.role, params.pit, params.vol)
       break;
     case 'user-login':
       result = await USER_CTX.userLogin(params.source, userId)
