@@ -12,7 +12,7 @@ async function startLearning(info) {
   if (!id) {
     id = ""
   }
-  return { learningId : id }
+  return id
 }
 
 async function endLearning(info, uuid) {

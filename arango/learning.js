@@ -42,6 +42,7 @@ async function addSentence(uuid, userSay, userMedia, parrotUrl) {
     logger.error('addSentence, uuid is null')
     return false
   }
+  logger.info("addSentence, uuid:", uuid)
   var doc = await ARANGO.fetchDoc(collectionName, uuid)
   if (!doc) {
     logger.error('addSentence, doc not found:', uuid)
