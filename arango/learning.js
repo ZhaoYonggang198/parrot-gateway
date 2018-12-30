@@ -80,20 +80,18 @@ async function querySentences(relation, day) {
 }
 
 async function getSentencesCount(relation) {
-  let aql = `for doc in ${collectionName}
-    FILTER doc.relation == '${relation}'
-    return LENGTH(doc.sentences)
+  let aql = `FOR doc IN ${collectionName}
+  FILTER doc.relation == '${relation}'
+  FOR c IN doc.sentences
+  LET l = LENGTH(c)
+  COLLECT a = l WITH COUNT INTO num
+  RETURN num
   `
-  let learnings = await ARANGO.queryDocs(aql)
-  if (!learnings) {
+  let num = await ARANGO.queryDocs(aql)
+  if (!num) {
     return 0
   }
-  var size = learnings.length
-  var count = 0
-  for (var i = 0; i < size; i++) {
-    count += learnings[i]
-  }
-  return count
+  return num
 }
 
 module.exports= {
