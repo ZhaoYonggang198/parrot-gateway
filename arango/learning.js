@@ -61,10 +61,22 @@ async function addSentence(uuid, userSay, userMedia, parrotUrl) {
 }
 
 async function querySentences(relation, day) {
-  let aql = `for doc in ${collectionName}
-  FILTER doc.relation == '${relation}' && doc.startDay == '${day}'
-  return doc
-  `
+  var aql = ""
+  if (day) {
+    aql = `for doc in ${collectionName}
+    FILTER doc.relation == '${relation}' && doc.startDay == '${day}'
+    SORT doc.startDay, doc.startTime  DESC
+    LIMIT 50
+    return doc
+    `
+  } else {
+    ql = `for doc in ${collectionName}
+    FILTER doc.relation == '${relation}'
+    SORT doc.startDay, doc.startTime  DESC
+    LIMIT 50
+    return doc
+    `
+  }
   let learnings = await ARANGO.queryDocs(aql)
   if (!learnings) {
     return []
