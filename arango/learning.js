@@ -87,10 +87,11 @@ async function getSentencesCount(relation) {
   var count = 0
   let learnings = await ARANGO.queryDocs(aql)
   if (!learnings) {
-    var size = learnings.length
-    for (var i = 0; i < size; i++) {
-      count += learnings[i]
-    }
+    return 0
+  }
+  var size = learnings.length
+  for (var i = 0; i < size; i++) {
+    count += learnings[i]
   }
   return count
 }
