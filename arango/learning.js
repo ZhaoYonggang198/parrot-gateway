@@ -70,7 +70,7 @@ async function querySentences(relation, day) {
     return doc
     `
   } else {
-    ql = `for doc in ${collectionName}
+    aql = `for doc in ${collectionName}
     FILTER doc.relation == '${relation}'
     SORT doc.startDay, doc.startTime  DESC
     LIMIT 50
